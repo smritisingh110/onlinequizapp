@@ -40,10 +40,6 @@ public class PageController {
         return "login";
     }
 
-    @GetMapping("/register")
-    public String register() {
-        return "register";
-    }
 
     @GetMapping("/create")
     public String createQuiz() {
