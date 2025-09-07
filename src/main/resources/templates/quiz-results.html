@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quiz Results</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.1.3/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        .results-header {
+            background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+            color: white;
+            padding: 2rem;
+            border-radius: 10px;
+            margin-bottom: 2rem;
+        }
+        .score-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-radius: 10px;
+            padding: 2rem;
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+        .question-result {
+            border-left: 4px solid #28a745;
+            margin-bottom: 1.5rem;
+        }
+        .question-result.incorrect {
+            border-left-color: #dc3545;
+        }
+        .correct-answer {
+            background-color: #d4edda;
+            border: 1px solid #c3e6cb;
+            border-radius: 5px;
+            padding: 10px;
+            margin-top: 10px;
+        }
+        .incorrect-answer {
+            background-color: #f8d7da;
+            border: 1px solid #f5c6cb;
+            border-radius: 5px;
+            padding: 10px;
+            margin-top: 10px;
+        }
+        .pass-status {
+            font-size: 1.5rem;
+            font-weight: bold;
+        }
+        .pass { color: #28a745; }
+        .fail { color: #dc3545; }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+        <div class="container">
+            <a class="navbar-brand" href="/dashboard">Quiz App</a>
+            <div class="navbar-nav ms-auto">
+                <a class="btn btn-outline-light btn-sm" href="/dashboard">Back to Dashboard</a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container mt-4">
+        <div class="results-header text-center">
+            <h1>Quiz Results</h1>
+            <h3 th:text="${quiz.title}">Quiz Title</h3>
+            <p class="mb-0">Here are your results, <span th:text="${username}">User</span>!</p>
+        </div>
+
+        <!-- Score Summary -->
+        <div class="row">
+            <div class="col-md-8 mx-auto">
+                <div class="score-card">
+                    <h2>Your Score</h2>
+                    <div class="row mt-4">
+                        <div class="col-4">
+                            <h3 th:text="${correctAnswers}">0</h3>
+                            <p>Correct</p>
+                        </div>
+                        <div class="col-4">
+                            <h3 th:text="${totalQuestions - correctAnswers}">0</h3>
+                            <p>Incorrect</p>
+                        </div>
+                        <div class="col-4">
+                            <h3 th:text="${percentage + '%'}">0%</h3>
+                            <p>Percentage</p>
+                        </div>
+                    </div>
+                    <div class="pass-status mt-3" 
+                         th:class="${percentage >= 60} ? 'pass-status pass' : 'pass-status fail'"
+                         th:text="${percentage >= 60} ? 'PASSED' : 'FAILED'">
+                        RESULT
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Detailed Results -->
+        <div class="row">
+            <div class="col-12">
+                <h3 class="mb-4">Detailed Results</h3>
+                
+                <div th:each="result, resultStat : ${results}" 
+                     class="question-result card"
+                     th:classappend="${result.correct} ? '' : 'incorrect'">
+                    <div class="card-header d-flex justify-content-between align-items-center">
+                        <h6 class="mb-0">
+                            Question <span th:text="${resultStat.count}">1</span>: 
+                            <span th:text="${result.question}">Question text</span>
+                        </h6>
+                        <span class="badge" 
+                              th:class="${result.correct} ? 'bg-success' : 'bg-danger'"
+                              th:text="${result.correct} ? 'Correct' : 'Incorrect'">
+                            Status
+                        </span>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <strong>Your Answer:</strong>
+                                <div th:class="${result.correct} ? 'correct-answer' : 'incorrect-answer'"
+                                     th:text="${result.userAnswer}">
+                                    User's answer
+                                </div>
+                            </div>
+                            <div class="col-md-6" th:if="${!result.correct}">
+                                <strong>Correct Answer:</strong>
+                                <div class="correct-answer" th:text="${result.correctAnswer}">
+                                    Correct answer
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Show all options -->
+                        <div class="mt-3">
+                            <strong>All Options:</strong>
+                            <ul class="list-unstyled mt-2">
+                                <li th:each="option : ${result.options}" 
+                                    class="mb-1"
+                                    th:class="${option.correct} ? 'text-success fw-bold' : ''">
+                                    <span th:if="${option.correct}">✓ </span>
+                                    <span th:text="${option.text}">Option text</span>
+                                    <small th:if="${option.correct}" class="text-success">(Correct Answer)</small>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="text-center mt-5 mb-5">
+            <a href="/dashboard" class="btn btn-primary btn-lg me-3">Take Another Quiz</a>
+            <button onclick="window.print()" class="btn btn-secondary btn-lg">Print Results</button>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.1.3/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Confetti animation for good scores
+        if (document.querySelector('.pass')) {
+            // Simple celebration effect
+            setTimeout(() => {
+                alert('🎉 Congratulations on passing the quiz! 🎉');
+            }, 500);
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quiz Dashboard</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.1.3/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        .quiz-card {
+            transition: transform 0.2s;
+            cursor: pointer;
+        }
+        .quiz-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+        .welcome-section {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 2rem;
+            border-radius: 10px;
+            margin-bottom: 2rem;
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+        <div class="container">
+            <a class="navbar-brand" href="#">Quiz App</a>
+            <div class="navbar-nav ms-auto">
+                <span class="navbar-text me-3">Welcome, <span th:text="${username}">User</span>!</span>
+                <a class="btn btn-outline-light btn-sm" href="/logout">Logout</a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container mt-4">
+        <div class="welcome-section text-center">
+            <h1>Quiz Dashboard</h1>
+            <p class="mb-0">Choose a quiz to take or create a new one!</p>
+        </div>
+
+        <!-- Admin Controls -->
+        <div class="row mb-4" sec:authorize="hasRole('ADMIN')">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="mb-0">Admin Controls</h5>
+                    </div>
+                    <div class="card-body">
+                        <a href="/create" class="btn btn-success me-2">Create New Quiz</a>
+                        <a href="/list-quiz" class="btn btn-info">Manage Quizzes</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Available Quizzes -->
+        <div class="row">
+            <div class="col-12">
+                <h3>Available Quizzes</h3>
+                <div class="row" th:if="${quizzes != null and !quizzes.empty}">
+                    <div class="col-md-4 mb-3" th:each="quiz : ${quizzes}">
+                        <div class="card quiz-card h-100">
+                            <div class="card-body">
+                                <h5 class="card-title" th:text="${quiz.title}">Quiz Title</h5>
+                                <p class="card-text">
+                                    <small class="text-muted">
+                                        Questions: <span th:text="${quiz.questions.size()}">0</span>
+                                    </small>
+                                </p>
+                                <a th:href="@{/quiz/{id}(id=${quiz.id})}" 
+                                   class="btn btn-primary w-100">
+                                    Take Quiz
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="alert alert-info" th:if="${quizzes == null or quizzes.empty}">
+                    No quizzes available yet. 
+                    <span sec:authorize="hasRole('ADMIN')">
+                        <a href="/create">Create your first quiz!</a>
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.1.3/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

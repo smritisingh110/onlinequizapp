@@ -74,6 +74,14 @@ public class QuizController {
                         Option option = new Option();
                         option.setText(optionText.trim());
                         option.setQuestion(question);
+                        
+                        // Check if this option is marked as correct
+                        String correctParamName = "questions[" + questionNum + "].correct";
+                        String correctAnswer = request.getParameter(correctParamName);
+                        if (correctAnswer != null && correctAnswer.equals(optionText.trim())) {
+                            option.setCorrect(true);
+                        }
+                        
                         question.getOptions().add(option);
                     }
                 }
@@ -87,9 +95,19 @@ public class QuizController {
                 return "redirect:/create";
             }
 
+            // Validate that each question has at least one correct answer
+            for (Question question : quiz.getQuestions()) {
+                boolean hasCorrectAnswer = question.getOptions().stream()
+                    .anyMatch(Option::isCorrect);
+                if (!hasCorrectAnswer && !question.getOptions().isEmpty()) {
+                    // Set first option as correct if none specified
+                    question.getOptions().get(0).setCorrect(true);
+                }
+            }
+
             quizRepository.save(quiz);
             redirectAttributes.addFlashAttribute("success", "Quiz created successfully!");
-            return "redirect:/list-quiz";
+            return "redirect:/dashboard";
 
         } catch (Exception e) {
             redirectAttributes.addFlashAttribute("error", "Error creating quiz: " + e.getMessage());
@@ -105,7 +123,7 @@ public class QuizController {
             model.addAttribute("quiz", optionalQuiz.get());
             return "take-quiz-page";
         } else {
-            return "redirect:/list-quiz";
+            return "redirect:/dashboard";
         }
     }
 

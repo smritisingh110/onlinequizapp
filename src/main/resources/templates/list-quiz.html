@@ -1,177 +1,121 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>All Quizzes - QuizMaster</title>
+    <title>Quiz List - Quiz App</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.1.3/css/bootstrap.min.css" rel="stylesheet">
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
         body {
-            font-family: "Inter", "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             min-height: 100vh;
-            color: #333;
-            line-height: 1.6;
         }
 
-        /* Header */
-        .header {
-            background: rgba(255, 255, 255, 0.95);
+        .navbar {
+            background: rgba(255, 255, 255, 0.95) !important;
             backdrop-filter: blur(10px);
-            padding: 1rem 0;
             box-shadow: 0 2px 20px rgba(0,0,0,0.1);
-            position: sticky;
-            top: 0;
-            z-index: 100;
         }
 
-        .header-content {
-            max-width: 1200px;
-            margin: 0 auto;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 0 2rem;
+        .navbar-brand {
+            font-weight: 700;
+            color: #667eea !important;
         }
 
-        .logo {
-            font-size: 1.8rem;
-            font-weight: 800;
-            color: #6366f1;
-            text-decoration: none;
-        }
-
-        .header-actions {
-            display: flex;
-            gap: 1rem;
-            align-items: center;
-        }
-
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 2rem;
-        }
-
-        /* Page Title */
-        .page-title {
-            text-align: center;
-            margin-bottom: 3rem;
-            color: white;
-        }
-
-        .page-title h1 {
-            font-size: clamp(2rem, 4vw, 3rem);
-            font-weight: 800;
-            margin-bottom: 0.5rem;
-            background: linear-gradient(45deg, #fff, #e0e7ff);
-            background-clip: text;
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-
-        .page-title p {
-            font-size: 1.2rem;
-            opacity: 0.9;
-        }
-
-        /* Controls Section */
-        .controls {
+        .welcome-section {
             background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(10px);
+            backdrop-filter: blur(20px);
+            color: #333;
             padding: 2rem;
-            border-radius: 20px;
+            border-radius: 15px;
+            margin-bottom: 2rem;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+
+        .welcome-section h1 {
+            color: #667eea;
+            margin-bottom: 0.5rem;
+        }
+
+        .controls-section {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            padding: 2rem;
+            border-radius: 15px;
             margin-bottom: 2rem;
             box-shadow: 0 10px 30px rgba(0,0,0,0.1);
         }
 
-        .controls-top {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 1.5rem;
-            flex-wrap: wrap;
-            gap: 1rem;
-        }
-
-        .search-filter-container {
-            display: flex;
-            gap: 1rem;
-            flex-wrap: wrap;
-            align-items: center;
-            flex: 1;
-        }
-
-        .search-box {
+        .search-container {
             position: relative;
-            min-width: 300px;
-            flex: 1;
+            margin-bottom: 1.5rem;
         }
 
-        .search-box input {
+        .search-container input {
             width: 100%;
-            padding: 0.75rem 1rem 0.75rem 3rem;
-            border: 2px solid #e2e8f0;
-            border-radius: 50px;
+            padding: 12px 45px 12px 15px;
+            border: 2px solid #e9ecef;
+            border-radius: 10px;
             font-size: 1rem;
             transition: all 0.3s ease;
-            background: white;
         }
 
-        .search-box input:focus {
+        .search-container input:focus {
             outline: none;
-            border-color: #6366f1;
-            box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
         }
 
         .search-icon {
             position: absolute;
-            left: 1rem;
+            right: 15px;
             top: 50%;
             transform: translateY(-50%);
-            color: #64748b;
-            font-size: 1.1rem;
+            color: #6c757d;
+        }
+
+        .filter-controls {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+            flex-wrap: wrap;
         }
 
         .filter-select {
-            padding: 0.75rem 1rem;
-            border: 2px solid #e2e8f0;
-            border-radius: 50px;
-            font-size: 1rem;
+            padding: 8px 15px;
+            border: 2px solid #e9ecef;
+            border-radius: 8px;
             background: white;
             cursor: pointer;
-            transition: all 0.3s ease;
+            transition: border-color 0.3s ease;
         }
 
         .filter-select:focus {
             outline: none;
-            border-color: #6366f1;
+            border-color: #667eea;
         }
 
         .view-toggle {
             display: flex;
-            background: #f1f5f9;
-            border-radius: 50px;
-            padding: 0.25rem;
+            background: #f8f9fa;
+            border-radius: 8px;
+            padding: 4px;
         }
 
         .view-btn {
-            padding: 0.5rem 1rem;
+            padding: 8px 16px;
             border: none;
             background: none;
-            border-radius: 50px;
+            border-radius: 6px;
             cursor: pointer;
             transition: all 0.3s ease;
             font-size: 0.9rem;
         }
 
         .view-btn.active {
-            background: #6366f1;
+            background: #667eea;
             color: white;
         }
 
@@ -179,6 +123,7 @@
             display: flex;
             gap: 2rem;
             justify-content: center;
+            margin-top: 1rem;
             flex-wrap: wrap;
         }
 
@@ -189,120 +134,56 @@
         .stat-number {
             font-size: 1.5rem;
             font-weight: 700;
-            color: #6366f1;
+            color: #667eea;
         }
 
         .stat-label {
             font-size: 0.9rem;
-            color: #64748b;
+            color: #6c757d;
         }
 
-        /* Buttons */
-        .btn {
-            padding: 0.75rem 1.5rem;
-            border: none;
-            border-radius: 50px;
-            font-weight: 600;
-            text-decoration: none;
-            transition: all 0.3s ease;
-            cursor: pointer;
-            font-size: 0.9rem;
-            display: inline-flex;
-            align-items: center;
-            gap: 0.5rem;
-        }
-
-        .btn-primary {
-            background: linear-gradient(135deg, #6366f1, #8b5cf6);
-            color: white;
-        }
-
-        .btn-primary:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 10px 25px rgba(99, 102, 241, 0.4);
-        }
-
-        .btn-outline {
-            background: transparent;
-            color: #6366f1;
-            border: 2px solid #6366f1;
-        }
-
-        .btn-outline:hover {
-            background: #6366f1;
-            color: white;
-        }
-
-        .btn-danger {
-            background: #ef4444;
-            color: white;
-        }
-
-        .btn-danger:hover {
-            background: #dc2626;
-            transform: translateY(-1px);
-        }
-
-        .btn-sm {
-            padding: 0.5rem 1rem;
-            font-size: 0.8rem;
-        }
-
-        /* Grid View */
         .quiz-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
             gap: 2rem;
-            margin-top: 2rem;
         }
 
         .quiz-card {
-            background: white;
-            border-radius: 20px;
-            padding: 2rem;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            border-radius: 15px;
+            padding: 1.5rem;
             box-shadow: 0 10px 30px rgba(0,0,0,0.1);
             transition: all 0.3s ease;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .quiz-card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 4px;
-            background: linear-gradient(135deg, #6366f1, #8b5cf6);
+            border-left: 4px solid #667eea;
         }
 
         .quiz-card:hover {
-            transform: translateY(-10px);
-            box-shadow: 0 20px 40px rgba(0,0,0,0.15);
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(0,0,0,0.15);
         }
 
         .quiz-header {
             display: flex;
-            justify-content: space-between;
-            align-items: flex-start;
+            justify-content: between;
+            align-items: center;
             margin-bottom: 1rem;
         }
 
         .quiz-id {
-            background: #f1f5f9;
-            color: #64748b;
-            padding: 0.25rem 0.75rem;
-            border-radius: 50px;
+            background: #f8f9fa;
+            color: #6c757d;
+            padding: 4px 12px;
+            border-radius: 20px;
             font-size: 0.8rem;
             font-weight: 600;
         }
 
         .quiz-title {
-            font-size: 1.3rem;
+            font-size: 1.25rem;
             font-weight: 700;
-            color: #1e293b;
+            color: #333;
             margin-bottom: 0.5rem;
-            line-height: 1.4;
         }
 
         .quiz-title a {
@@ -312,15 +193,16 @@
         }
 
         .quiz-title a:hover {
-            color: #6366f1;
+            color: #667eea;
         }
 
         .quiz-meta {
             display: flex;
-            gap: 1.5rem;
+            gap: 1rem;
             margin-bottom: 1.5rem;
-            color: #64748b;
+            color: #6c757d;
             font-size: 0.9rem;
+            flex-wrap: wrap;
         }
 
         .meta-item {
@@ -335,13 +217,64 @@
             flex-wrap: wrap;
         }
 
-        /* Table View */
+        .btn {
+            padding: 8px 16px;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            font-size: 0.9rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.3);
+            color: white;
+            text-decoration: none;
+        }
+
+        .btn-outline-primary {
+            background: transparent;
+            color: #667eea;
+            border: 2px solid #667eea;
+        }
+
+        .btn-outline-primary:hover {
+            background: #667eea;
+            color: white;
+        }
+
+        .btn-danger {
+            background: #dc3545;
+            color: white;
+        }
+
+        .btn-danger:hover {
+            background: #c82333;
+            transform: translateY(-1px);
+        }
+
+        .btn-sm {
+            padding: 6px 12px;
+            font-size: 0.8rem;
+        }
+
         .quiz-table-container {
-            background: white;
-            border-radius: 20px;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            border-radius: 15px;
             overflow: hidden;
             box-shadow: 0 10px 30px rgba(0,0,0,0.1);
-            margin-top: 2rem;
         }
 
         .quiz-table {
@@ -350,18 +283,15 @@
         }
 
         .quiz-table th {
-            background: linear-gradient(135deg, #6366f1, #8b5cf6);
+            background: linear-gradient(135deg, #667eea, #764ba2);
             color: white;
-            padding: 1.25rem;
+            padding: 1rem;
             text-align: left;
             font-weight: 600;
-            font-size: 0.9rem;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
         }
 
         .quiz-table td {
-            padding: 1.25rem;
+            padding: 1rem;
             border-bottom: 1px solid #f1f5f9;
         }
 
@@ -370,8 +300,7 @@
         }
 
         .quiz-table tbody tr:hover {
-            background: #f8fafc;
-            transform: translateX(5px);
+            background: #f8f9fa;
         }
 
         .quiz-table tbody tr:last-child td {
@@ -379,112 +308,74 @@
         }
 
         .table-quiz-title a {
-            color: #6366f1;
+            color: #667eea;
             text-decoration: none;
             font-weight: 600;
-            font-size: 1.1rem;
         }
 
         .table-quiz-title a:hover {
-            color: #4f46e5;
+            color: #5a6acf;
             text-decoration: underline;
         }
 
         .table-actions {
             display: flex;
             gap: 0.5rem;
+            flex-wrap: wrap;
         }
 
-        /* Alerts */
         .alert {
-            padding: 1rem 1.5rem;
-            border-radius: 12px;
-            margin-bottom: 2rem;
+            padding: 1rem;
+            border-radius: 10px;
+            margin-bottom: 1.5rem;
             font-weight: 500;
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
         }
 
         .alert-success {
-            background: #dcfce7;
-            color: #166534;
-            border: 1px solid #bbf7d0;
+            background: #d1e7dd;
+            color: #0f5132;
+            border: 1px solid #a3cfbb;
         }
 
-        .alert-error {
-            background: #fee2e2;
-            color: #991b1b;
-            border: 1px solid #fecaca;
+        .alert-danger {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f1aeb5;
         }
 
-        /* Empty State */
         .empty-state {
             text-align: center;
             padding: 4rem 2rem;
-            background: white;
-            border-radius: 20px;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            border-radius: 15px;
             box-shadow: 0 10px 30px rgba(0,0,0,0.1);
-            margin-top: 2rem;
-        }
-
-        .empty-icon {
-            font-size: 4rem;
-            margin-bottom: 1rem;
-            opacity: 0.3;
         }
 
         .empty-state h3 {
             font-size: 1.5rem;
             font-weight: 700;
-            color: #1e293b;
+            color: #333;
             margin-bottom: 0.5rem;
         }
 
         .empty-state p {
-            color: #64748b;
+            color: #6c757d;
             margin-bottom: 2rem;
         }
 
-        /* Loading Animation */
-        .loading {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            padding: 4rem;
+        .hidden {
+            display: none !important;
         }
 
-        .spinner {
-            width: 40px;
-            height: 40px;
-            border: 4px solid #f1f5f9;
-            border-top: 4px solid #6366f1;
-            border-radius: 50%;
-            animation: spin 1s linear infinite;
-        }
-
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-
-        /* Responsive Design */
         @media (max-width: 768px) {
             .container {
                 padding: 1rem;
             }
 
-            .controls-top {
+            .filter-controls {
                 flex-direction: column;
                 align-items: stretch;
-            }
-
-            .search-filter-container {
-                flex-direction: column;
-            }
-
-            .search-box {
-                min-width: auto;
             }
 
             .stats-bar {
@@ -497,7 +388,7 @@
             }
 
             .quiz-card {
-                padding: 1.5rem;
+                padding: 1rem;
             }
 
             .quiz-table-container {
@@ -508,73 +399,53 @@
                 min-width: 600px;
             }
         }
-
-        /* Animations */
-        .fade-in {
-            animation: fadeIn 0.5s ease-out;
-        }
-
-        @keyframes fadeIn {
-            from {
-                opacity: 0;
-                transform: translateY(20px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        /* Hidden class */
-        .hidden {
-            display: none !important;
-        }
     </style>
 </head>
 <body>
-    <!-- Header -->
-    <header class="header">
-        <div class="header-content">
-            <a href="/" class="logo">🎯 QuizMaster</a>
-            <div class="header-actions">
-                <a href="/create" class="btn btn-primary">✨ Create Quiz</a>
-                <a href="/" class="btn btn-outline">← Home</a>
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-light">
+        <div class="container">
+            <a class="navbar-brand" href="/dashboard">Quiz App</a>
+            <div class="navbar-nav ms-auto">
+                <a class="btn btn-outline-primary btn-sm me-2" href="/dashboard">Dashboard</a>
+                <a class="btn btn-primary btn-sm" href="/create">Create Quiz</a>
+                <a class="btn btn-outline-primary btn-sm ms-2" href="/logout">Logout</a>
             </div>
         </div>
-    </header>
+    </nav>
 
-    <div class="container">
-        <!-- Page Title -->
-        <div class="page-title">
-            <h1>📋 Quiz Library</h1>
-            <p>Discover and take amazing quizzes from our community</p>
+    <div class="container mt-4">
+        <!-- Page Header -->
+        <div class="welcome-section">
+            <h1>Quiz Management</h1>
+            <p class="mb-0">Manage and organize all your quizzes</p>
         </div>
 
-        <!-- Success/Error Messages -->
-        <div th:if="${success}" class="alert alert-success fade-in">
-            <span>✅</span>
+        <!-- Flash Messages -->
+        <div th:if="${success}" class="alert alert-success alert-dismissible fade show" role="alert">
             <span th:text="${success}"></span>
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
         </div>
-        <div th:if="${error}" class="alert alert-error fade-in">
-            <span>❌</span>
+        <div th:if="${error}" class="alert alert-danger alert-dismissible fade show" role="alert">
             <span th:text="${error}"></span>
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
         </div>
 
-        <!-- Controls -->
-        <div class="controls fade-in">
-            <div class="controls-top">
-                <div class="search-filter-container">
-                    <div class="search-box">
-                        <span class="search-icon">🔍</span>
-                        <input type="text" id="searchInput" placeholder="Search quizzes by title or topic...">
-                    </div>
-                    <select class="filter-select" id="sortFilter">
-                        <option value="title">Sort by Title</option>
-                        <option value="questions">Sort by Questions</option>
-                        <option value="newest">Newest First</option>
-                        <option value="oldest">Oldest First</option>
-                    </select>
-                </div>
+        <!-- Controls Section -->
+        <div class="controls-section">
+            <div class="search-container">
+                <input type="text" id="searchInput" placeholder="Search quizzes by title..." class="form-control">
+                <div class="search-icon">🔍</div>
+            </div>
+            
+            <div class="filter-controls">
+                <select class="filter-select" id="sortFilter">
+                    <option value="title">Sort by Title</option>
+                    <option value="questions">Sort by Questions</option>
+                    <option value="id-asc">ID (Low to High)</option>
+                    <option value="id-desc">ID (High to Low)</option>
+                </select>
+                
                 <div class="view-toggle">
                     <button class="view-btn active" id="gridViewBtn">📱 Grid</button>
                     <button class="view-btn" id="tableViewBtn">📊 Table</button>
@@ -599,10 +470,12 @@
 
         <!-- Quiz Grid View -->
         <div id="gridView" class="quiz-grid">
-            <div th:each="quiz : ${quizzes}" class="quiz-card fade-in" th:attr="data-title=${quiz.title}, data-questions=${#lists.size(quiz.questions)}">
+            <div th:each="quiz : ${quizzes}" 
+                 class="quiz-card" 
+                 th:attr="data-title=${quiz.title}, data-questions=${#lists.size(quiz.questions)}, data-id=${quiz.id}">
+                
                 <div class="quiz-header">
-                    <span class="quiz-id" th:text="'#' + ${quiz.id}">ID</span>
-                    <div class="quiz-menu">⋮</div>
+                    <span class="quiz-id" th:text="'Quiz #' + ${quiz.id}">Quiz ID</span>
                 </div>
                 
                 <div class="quiz-title">
@@ -612,24 +485,31 @@
                 <div class="quiz-meta">
                     <div class="meta-item">
                         <span>❓</span>
-                        <span th:text="${#lists.size(quiz.questions)} + ' questions'">Questions</span>
-                    </div>
-                    <div class="meta-item">
-                        <span>⭐</span>
-                        <span>4.8 rating</span>
+                        <span th:text="${#lists.size(quiz.questions)} + ' questions'">0 questions</span>
                     </div>
                     <div class="meta-item">
                         <span>👥</span>
-                        <span th:text="${(quiz.id * 17) % 100} + ' taken'">Taken</span>
+                        <span th:text="${(quiz.id * 13) % 50} + ' attempts'">0 attempts</span>
                     </div>
                 </div>
                 
                 <div class="quiz-actions">
-                    <a th:href="@{/quiz/{id}(id=${quiz.id})}" class="btn btn-primary btn-sm">🚀 Take Quiz</a>
-                    <button class="btn btn-outline btn-sm" onclick="shareQuiz(this)" th:attr="data-id=${quiz.id}, data-title=${quiz.title}">📤 Share</button>
-                    <form th:action="@{/delete/{id}(id=${quiz.id})}" method="post" style="display: inline;"
-                          onsubmit="return confirmDelete(event, this)" th:attr="data-title=${quiz.title}">
-                        <button type="submit" class="btn btn-danger btn-sm">🗑️ Delete</button>
+                    <a th:href="@{/quiz/{id}(id=${quiz.id})}" class="btn btn-primary btn-sm">
+                        🚀 Take Quiz
+                    </a>
+                    <button class="btn btn-outline-primary btn-sm" 
+                            onclick="shareQuiz(this)" 
+                            th:attr="data-id=${quiz.id}, data-title=${quiz.title}">
+                        📤 Share
+                    </button>
+                    <form th:action="@{/delete/{id}(id=${quiz.id})}" 
+                          method="post" 
+                          style="display: inline;"
+                          onsubmit="return confirmDelete(event, this)" 
+                          th:attr="data-title=${quiz.title}">
+                        <button type="submit" class="btn btn-danger btn-sm">
+                            🗑️ Delete
+                        </button>
                     </form>
                 </div>
             </div>
@@ -643,30 +523,32 @@
                         <th>ID</th>
                         <th>Quiz Title</th>
                         <th>Questions</th>
-                        <th>Rating</th>
-                        <th>Times Taken</th>
+                        <th>Attempts</th>
                         <th>Actions</th>
                     </tr>
                 </thead>
                 <tbody>
-                    <tr th:each="quiz : ${quizzes}" th:attr="data-title=${quiz.title}, data-questions=${#lists.size(quiz.questions)}">
+                    <tr th:each="quiz : ${quizzes}" 
+                        th:attr="data-title=${quiz.title}, data-questions=${#lists.size(quiz.questions)}, data-id=${quiz.id}">
                         <td>
                             <span class="quiz-id" th:text="'#' + ${quiz.id}">ID</span>
                         </td>
                         <td class="table-quiz-title">
                             <a th:href="@{/quiz/{id}(id=${quiz.id})}" th:text="${quiz.title}">Quiz Title</a>
                         </td>
-                        <td>
-                            <span th:text="${#lists.size(quiz.questions)}">0</span> questions
-                        </td>
-                        <td>⭐ 4.8</td>
-                        <td th:text="${(quiz.id * 17) % 100} + ' times'">0 times</td>
+                        <td th:text="${#lists.size(quiz.questions)}">0</td>
+                        <td th:text="${(quiz.id * 13) % 50}">0</td>
                         <td>
                             <div class="table-actions">
-                                <a th:href="@{/quiz/{id}(id=${quiz.id})}" class="btn btn-primary btn-sm">Take Quiz</a>
-                                <button class="btn btn-outline btn-sm" onclick="shareQuiz(this)" th:attr="data-id=${quiz.id}, data-title=${quiz.title}">Share</button>
-                                <form th:action="@{/delete/{id}(id=${quiz.id})}" method="post" style="display: inline;"
-                                      onsubmit="return confirmDelete(event, this)" th:attr="data-title=${quiz.title}">
+                                <a th:href="@{/quiz/{id}(id=${quiz.id})}" class="btn btn-primary btn-sm">Take</a>
+                                <button class="btn btn-outline-primary btn-sm" 
+                                        onclick="shareQuiz(this)" 
+                                        th:attr="data-id=${quiz.id}, data-title=${quiz.title}">Share</button>
+                                <form th:action="@{/delete/{id}(id=${quiz.id})}" 
+                                      method="post" 
+                                      style="display: inline;"
+                                      onsubmit="return confirmDelete(event, this)" 
+                                      th:attr="data-title=${quiz.title}">
                                     <button type="submit" class="btn btn-danger btn-sm">Delete</button>
                                 </form>
                             </div>
@@ -677,104 +559,81 @@
         </div>
 
         <!-- Empty State -->
-        <div th:if="${#lists.isEmpty(quizzes)}" class="empty-state fade-in">
-            <div class="empty-icon">📝</div>
+        <div th:if="${#lists.isEmpty(quizzes)}" class="empty-state">
             <h3>No Quizzes Yet</h3>
-            <p>Be the first to create an amazing quiz and share it with the community!</p>
-            <a href="/create" class="btn btn-primary">🚀 Create Your First Quiz</a>
+            <p>Create your first quiz to get started!</p>
+            <a href="/create" class="btn btn-primary">Create Your First Quiz</a>
         </div>
     </div>
 
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.1.3/js/bootstrap.bundle.min.js"></script>
     <script>
         // Initialize
         document.addEventListener('DOMContentLoaded', function() {
-            calculateTotalQuestions();
-            updateFilteredCount();
+            updateTotalQuestions();
+            setupEventListeners();
         });
+        function setupEventListeners() {
+            const searchInput = document.getElementById('searchInput');
+            const sortFilter = document.getElementById('sortFilter');
+            const gridViewBtn = document.getElementById('gridViewBtn');
+            const tableViewBtn = document.getElementById('tableViewBtn');
+            const gridView = document.getElementById('gridView');
+            const tableView = document.getElementById('tableView');
 
-        // Search functionality
-        const searchInput = document.getElementById('searchInput');
-        const sortFilter = document.getElementById('sortFilter');
-        let allQuizzes = [];
+            searchInput.addEventListener('input', filterQuizzes);
+            sortFilter.addEventListener('change', sortQuizzes);
+            gridViewBtn.addEventListener('click', () => toggleView('grid'));
+            tableViewBtn.addEventListener('click', () => toggleView('table'));
+        }   
+        function filterQuizzes() {
+            const query = document.getElementById('searchInput').value.toLowerCase();
+            const quizzes = document.querySelectorAll('#gridView .quiz-card, #tableView tbody tr');
+            let visibleCount = 0;
 
-        searchInput.addEventListener('input', function() {
-            filterAndSort();
-        });
-
-        sortFilter.addEventListener('change', function() {
-            filterAndSort();
-        });
-
-        function filterAndSort() {
-            const searchTerm = searchInput.value.toLowerCase();
-            const sortBy = sortFilter.value;
-            
-            // Get all quiz elements
-            const gridItems = document.querySelectorAll('.quiz-card');
-            const tableRows = document.querySelectorAll('.quiz-table tbody tr');
-            
-            let visibleItems = [];
-            
-            // Filter grid items
-            gridItems.forEach(item => {
-                const title = item.getAttribute('data-title').toLowerCase();
-                const isVisible = title.includes(searchTerm);
-                item.style.display = isVisible ? 'block' : 'none';
-                if (isVisible) visibleItems.push(item);
-            });
-            
-            // Filter table rows
-            tableRows.forEach(row => {
-                const title = row.getAttribute('data-title').toLowerCase();
-                const isVisible = title.includes(searchTerm);
-                row.style.display = isVisible ? 'table-row' : 'none';
-            });
-            
-            // Sort visible items
-            sortItems(visibleItems, sortBy);
-            updateFilteredCount();
-        }
-
-        function sortItems(items, sortBy) {
-            const container = document.querySelector('.quiz-grid');
-            
-            items.sort((a, b) => {
-                switch(sortBy) {
-                    case 'title':
-                        return a.getAttribute('data-title').localeCompare(b.getAttribute('data-title'));
-                    case 'questions':
-                        return parseInt(b.getAttribute('data-questions')) - parseInt(a.getAttribute('data-questions'));
-                    case 'newest':
-                        // Simulate by ID (higher ID = newer)
-                        return parseInt(b.querySelector('.quiz-id').textContent.replace('#', '')) - 
-                               parseInt(a.querySelector('.quiz-id').textContent.replace('#', ''));
-                    case 'oldest':
-                        return parseInt(a.querySelector('.quiz-id').textContent.replace('#', '')) - 
-                               parseInt(b.querySelector('.quiz-id').textContent.replace('#', ''));
-                    default:
-                        return 0;
+            quizzes.forEach(quiz => {
+                const title = quiz.getAttribute('data-title').toLowerCase();
+                if (title.includes(query)) {
+                    quiz.style.display = '';
+                    visibleCount++;
+                } else {
+                    quiz.style.display = 'none';
                 }
             });
-            
-            // Reorder in DOM
-            items.forEach(item => container.appendChild(item));
+
+            document.getElementById('filteredQuizzes').textContent = visibleCount;
         }
+        function sortQuizzes() {
+            const criteria = document.getElementById('sortFilter').value;
+            const gridView = document.getElementById('gridView');
+            const tableView = document.getElementById('tableView').querySelector('tbody');
+            const gridQuizzes = Array.from(gridView.children);
+            const tableQuizzes = Array.from(tableView.children);
+            let sortedGrid, sortedTable;
+            if (criteria === 'title') {
+                sortedGrid = gridQuizzes.sort((a, b) => a.getAttribute('data-title').localeCompare(b.getAttribute('data-title')));
+                sortedTable = tableQuizzes.sort((a, b) => a.getAttribute('data-title').localeCompare(b.getAttribute('data-title')));
+            } else if (criteria === 'questions') {
+                sortedGrid = gridQuizzes.sort((a, b) => b.getAttribute('data-questions') - a.getAttribute('data-questions'));
+                sortedTable = tableQuizzes.sort((a, b) => b.getAttribute('data-questions') - a.getAttribute('data-questions'));
+            } else if (criteria === 'id-asc') {
+                sortedGrid = gridQuizzes.sort((a, b) => a.getAttribute('data-id') - b.getAttribute('data-id'));
+                sortedTable = tableQuizzes.sort((a, b) => a.getAttribute('data-id') - b.getAttribute('data-id'));
+            } else if (criteria === 'id-desc') {
+                sortedGrid = gridQuizzes.sort((a, b) => b.getAttribute('data-id') - a.getAttribute('data-id'));
+                sortedTable = tableQuizzes.sort((a, b) => b.getAttribute('data-id') - a.getAttribute('data-id'));
+            }
+            gridView.innerHTML = '';
+            sortedGrid.forEach(quiz => gridView.appendChild(quiz));
+            tableView.innerHTML = '';
+            sortedTable.forEach(quiz => tableView.appendChild(quiz));
+        }   
+        function toggleView(view) {
+            const gridView = document.getElementById('gridView');
+            const tableView = document.getElementById('tableView');
+            const gridViewBtn = document.getElementById('gridViewBtn');
+            const tableViewBtn = document.getElementById('tableViewBtn');
 
-        // View toggle
-        const gridViewBtn = document.getElementById('gridViewBtn');
-        const tableViewBtn = document.getElementById('tableViewBtn');
-        const gridView = document.getElementById('gridView');
-        const tableView = document.getElementById('tableView');
-
-        gridViewBtn.addEventListener('click', function() {
-            switchView('grid');
-        });
-
-        tableViewBtn.addEventListener('click', function() {
-            switchView('table');
-        });
-
-        function switchView(view) {
             if (view === 'grid') {
                 gridView.classList.remove('hidden');
                 tableView.classList.add('hidden');
@@ -783,124 +642,36 @@
             } else {
                 gridView.classList.add('hidden');
                 tableView.classList.remove('hidden');
-                tableViewBtn.classList.add('active');
                 gridViewBtn.classList.remove('active');
+                tableViewBtn.classList.add('active');
             }
         }
-
-        // Delete confirmation
-        function confirmDelete(event, form) {
-            event.preventDefault();
-            const title = form.getAttribute('data-title');
-            
-            if (confirm(`Are you sure you want to delete "${title}"?\n\nThis action cannot be undone.`)) {
-                // Add loading state
-                const deleteBtn = form.querySelector('button');
-                const originalText = deleteBtn.innerHTML;
-                deleteBtn.innerHTML = '⏳ Deleting...';
-                deleteBtn.disabled = true;
-                
-                // Submit after brief delay for UX
-                setTimeout(() => {
-                    form.submit();
-                }, 500);
-            }
-            
-            return false;
+        function updateTotalQuestions() {
+            const quizzes = document.querySelectorAll('#gridView .quiz-card');
+            let totalQuestions = 0;
+            quizzes.forEach(quiz => {
+                totalQuestions += parseInt(quiz.getAttribute('data-questions'));
+            }); 
+            document.getElementById('totalQuestions').textContent = totalQuestions;
         }
-
-        // Share quiz
         function shareQuiz(button) {
             const quizId = button.getAttribute('data-id');
             const quizTitle = button.getAttribute('data-title');
-            const url = `${window.location.origin}/quiz/${quizId}`;
-            
-            // Try native sharing first
-            if (navigator.share) {
-                navigator.share({
-                    title: `Take this quiz: ${quizTitle}`,
-                    text: `Check out this awesome quiz I found!`,
-                    url: url
-                }).catch(console.error);
-            } else {
-                // Fallback: copy to clipboard
-                navigator.clipboard.writeText(url).then(() => {
-                    // Show temporary success message
-                    const originalText = button.innerHTML;
-                    button.innerHTML = '✅ Copied!';
-                    button.style.background = '#10b981';
-                    
-                    setTimeout(() => {
-                        button.innerHTML = originalText;
-                        button.style.background = '';
-                    }, 2000);
-                }).catch(() => {
-                    alert(`Share this quiz: ${url}`);
-                });
-            }
-        }
-
-        // Calculate total questions
-        function calculateTotalQuestions() {
-            const cards = document.querySelectorAll('.quiz-card');
-            let total = 0;
-            
-            cards.forEach(card => {
-                const questions = parseInt(card.getAttribute('data-questions') || '0');
-                total += questions;
-            });
-            
-            document.getElementById('totalQuestions').textContent = total;
-        }
-
-        // Update filtered count
-        function updateFilteredCount() {
-            const visibleCards = document.querySelectorAll('.quiz-card[style*="display: block"], .quiz-card:not([style*="display: none"])').length;
-            const totalCards = document.querySelectorAll('.quiz-card').length;
-            
-            document.getElementById('filteredQuizzes').textContent = visibleCards || totalCards;
-        }
-
-        // Smooth scroll for better UX
-        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-            anchor.addEventListener('click', function (e) {
-                e.preventDefault();
-                const target = document.querySelector(this.getAttribute('href'));
-                if (target) {
-                    target.scrollIntoView({
-                        behavior: 'smooth',
-                        block: 'start'
-                    });
-                }
-            });
-        });
-
-        // Add stagger animation to cards
-        function staggerAnimation() {
-            const cards = document.querySelectorAll('.quiz-card');
-            cards.forEach((card, index) => {
-                card.style.animationDelay = `${index * 0.1}s`;
-                card.classList.add('fade-in');
+            const quizUrl = `${window.location.origin}/quiz/${quizId}`;
+            navigator.clipboard.writeText(quizUrl).then(() => {
+                alert(`Link for "${quizTitle}" copied to clipboard!`);
+            }).catch(err => {
+                alert('Failed to copy link: ', err);
             });
         }
-
-        // Initialize stagger animation
-        staggerAnimation();
-
-        // Keyboard shortcuts
-        document.addEventListener('keydown', function(e) {
-            // Ctrl/Cmd + K for search focus
-            if ((e.ctrlKey || e.metaKey) && e.key === 'k') {
-                e.preventDefault();
-                searchInput.focus();
+        function confirmDelete(event, form) {
+            const quizTitle = form.getAttribute('data-title');
+            if (!confirm(`Are you sure you want to delete the quiz "${quizTitle}"? This action cannot be undone.`)) {
+                event.preventDefault();
+                return false;
             }
-            
-            // Escape to clear search
-            if (e.key === 'Escape' && document.activeElement === searchInput) {
-                searchInput.value = '';
-                filterAndSort();
-            }
-        });
+            return true;
+        }
     </script>
 </body>
-</html>
+</html> 

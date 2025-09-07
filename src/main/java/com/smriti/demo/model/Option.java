@@ -10,10 +10,21 @@ public class Option {
     private Long id;
 
     private String text;
+    
+    // Add this field to mark correct answers
+    private boolean correct = false;
 
     @ManyToOne
     @JoinColumn(name = "question_id")
     private Question question;
+
+    // Constructors
+    public Option() {}
+    
+    public Option(String text, boolean correct) {
+        this.text = text;
+        this.correct = correct;
+    }
 
     // Getters and Setters
     public Long getId() {
@@ -30,6 +41,14 @@ public class Option {
 
     public void setText(String text) {
         this.text = text;
+    }
+
+    public boolean isCorrect() {
+        return correct;
+    }
+
+    public void setCorrect(boolean correct) {
+        this.correct = correct;
     }
 
     public Question getQuestion() {
